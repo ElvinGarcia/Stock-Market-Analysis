@@ -28,10 +28,11 @@ public class Tester {
         //opend the file and create a Vector of symbols. Using Helpers
     }
     public void setPath(String p){
-        mPath = p;
+        mPath = "../src/com/mac286/project/Data/";
     }
     public void setFile(String f){
-        mFile = f;
+        mFile = "AAPL_Daily.csv";
+
     }
     public boolean run(){
         //if mSymbols is empty or null, create a new one
