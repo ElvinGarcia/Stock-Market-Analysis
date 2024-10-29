@@ -20,7 +20,7 @@ public class Helper {
             // read file line by line
             String st;
             while ((st = br.readLine()) != null) {
-                symbols.add(st);
+                symbols.add(st + "_Daily.csv");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

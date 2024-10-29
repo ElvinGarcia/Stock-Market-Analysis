@@ -1,6 +1,7 @@
 package com.mac286.project;
 
 import java.io.File;
+import java.util.Vector;
 
 /*
 In this class you desing you main to test All stocks and
@@ -15,16 +16,13 @@ public class Main {
         //If you are testing a risk based on stoploss and target
         float[] riskFactor = {0.5f, 1f, 2f, 5f, 10f};
         //set path to appropriate path ("C:/ProfOmarMAC286/Spring2024/Data/)
+        String path = "src/com/mac286/project/Data/";
 
-        final File folder = new File("src/com/mac286/project/Data");
-
-        File[] listOfFiles = folder.listFiles();
-
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                System.out.println(file.getName());
-            }
+        Vector<String> symbols = Helper.loadSymbols(path, "Stocks.txt");
+        for (String symbol : symbols) {
+            System.out.println(symbol);
         }
+
 
 
 
