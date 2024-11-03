@@ -20,7 +20,7 @@ public class Helper {
             // read file line by line
             String st;
             while ((st = br.readLine()) != null) {
-                symbols.add(st + "_Daily.csv");
+                symbols.add(st);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -32,7 +32,7 @@ public class Helper {
     //Write a Static method that accepts a Vector of Trades and goes
     //through it to compute all statistics, return the statistics as
     //an object.
-    public Statistics computeStats(Vector<Trade> trades){
+    public static Statistics computeStats(Vector<Trade> trades){
         //Create a Statistics object
 
         //go through Vector trades one by one and compute all the Stats
