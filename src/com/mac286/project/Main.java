@@ -15,33 +15,36 @@ public class Main {
         float[] riskFactor = {0.5f, 1f, 2f, 5f, 10f};
         //set path to appropriate path
         String path = "src/com/mac286/project/Data/";
-        String file = "";
+        //set file to appropriate file
+        String fileStocks = "Stocks.txt", fileETFs = "ETFs.txt";
 
-        //set file to appropriate file (stocks.txt)
-        file = "Stocks.txt";
+
 
         //loop through the risk array
         for (float v : riskFactor) {
+            System.out.printf("************* Current Risk: %f *************", v);
             // Create a Tester with arguments path, file, and riskFactor v
-            Tester tester = new Tester(path, file, v);
+            Tester testerStock = new Tester(path, fileStocks, v);
             //Call run method on the tester
-            tester.run();
+            testerStock.run();
             // get the trades vector getTrades()
-            Vector<Trade> trades = tester.getTrades();
+            Vector<Trade> tradesStock = testerStock.getTrades();
             //call the helper method computeStats with the trade vector as input
-            Statistics stats = Helper.computeStats(trades);
+            Statistics statsStock = Helper.computeStats(tradesStock);
             //display the results using the toString of the Statistics method
-            System.out.println(stats);
-        }
+            System.out.println("************* Stock Statistics *************");
+            System.out.println(statsStock);
+            Tester testerETF = new Tester(path, fileETFs, v);
+            testerETF.run();
+            Vector<Trade> tradesETF = testerETF.getTrades();
+            Statistics statsETF = Helper.computeStats(tradesETF);
+            System.out.println("************* ETF Statistics *************");
+            System.out.println(statsETF);
 
-        //Change the filename to ETFs.txt and do the same.
-        file = "ETFs.txt";
-        for (float v : riskFactor) {
-            Tester tester = new Tester(path, file, v);
-            tester.run();
-            Vector<Trade> trades = tester.getTrades();
-            Statistics stats = Helper.computeStats(trades);
-            System.out.println(stats);
+            tradesStock.addAll(tradesETF);
+            Statistics all = Helper.computeStats(tradesStock);
+            System.out.println("************* Combined Statistics *************");
+            System.out.println(all);
         }
     }
 }

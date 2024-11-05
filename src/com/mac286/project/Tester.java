@@ -21,6 +21,7 @@ public class Tester {
     private Vector<String> vSymbols;
     private Vector<Trade> mTrades;
     private String mPath, mFile;
+    private float risk;
     public Tester(String path, String file, float risk){
         //set path and file
         mPath = path;
@@ -41,12 +42,11 @@ public class Tester {
     public boolean run() {
         if (vSymbols == null || vSymbols.isEmpty()) {
             vSymbols = Helper.loadSymbols(mPath, mFile); // create a new one part
-
-            //            if (vSymbols.isEmpty()) {
-            // create a symbol Tester with appropriate parameters
-            //    System.out.println("No symbols found. Exiting.");
-            //    return false;
+            if (vSymbols == null || vSymbols.isEmpty()) {
+                return false;
+            }
         }
+
         //if mTrades null create a new one.
         if (mTrades == null) {
             mTrades = new Vector<Trade>(); //create a new one part
@@ -58,9 +58,7 @@ public class Tester {
             symbolTester.test();//Test the symbol (calling .test() method)
             //collect the trades by calling getTrades() method of the SymbolTester
             Vector<Trade> trades = symbolTester.getTrades();
-            for (Trade trade : trades) {
-                mTrades.add(trade);
-            }
+            mTrades.addAll(trades);
         }
         return true;
     }
