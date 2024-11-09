@@ -7,10 +7,10 @@ import java.util.Vector;
 
 public class SymbolTester {
     private float riskFactor; //TODO: Change this to suit your need
-    private String mSymbol;
+    private String mSymbol; // e.g. AAPL
     private String dataPath; //= "C:\Users\oaith\Courses\MAC286\Fall2023\Data\";
 
-    private Vector<Bar> mData;
+    private Vector<Bar> mData; // this is the collection of bars
     private Vector<Trade> mTrades;
     private boolean loaded = false;
 
@@ -49,7 +49,7 @@ public class SymbolTester {
             return;
         }
     }
-
+    // checks if the bar at the current index is an x day low (in our case, a 10-day low)
     private boolean xDaysLow(int ind, int days) {
         for (int i = ind-1; i > ind-days; i--) {
             if(mData.elementAt(i).getLow() < mData.elementAt(ind).getLow())
@@ -57,6 +57,7 @@ public class SymbolTester {
         }
         return true;
     }
+    // checks if the bar at the current index is an x day high (in our case, a 10-day high)
     private boolean xDaysHigh(int ind, int days) {
         for (int i = ind-1; i > ind-days; i--) {
             if(mData.elementAt(i).getHigh() > mData.elementAt(ind).getHigh())
@@ -64,13 +65,18 @@ public class SymbolTester {
         }
         return true;
     }
+    /*
+    outcomes() is used once a pattern is spotted, and takes in the trade values and the given index in mData where
+    the trade starts. It then, for either the long trade or the short trade case, looks for the close of the given
+    trade.
+    */
     void outcomes(Trade T, int ind) {
         for(int i = ind; i < mData.size(); i++) {
             if(T.getDir() == Direction.LONG) {
                 if(mData.elementAt(i).getHigh() > T.getTarget()) { //it is a win
-                    //consider a gap day
+                    //consider a gap day; a day where no trading occurs, but the security's price either rises or falls
                     if(mData.elementAt(i).getOpen() > T.getTarget()) {
-                        //close at open  a gap day
+                        //close at open in the gap up day case
                         T.close(mData.elementAt(i).getDate(), mData.elementAt(i).getOpen(), i-ind);
                         return;
                     }else {
@@ -95,7 +101,7 @@ public class SymbolTester {
                 if(mData.elementAt(i).getLow() <= T.getTarget()) { //it is a win
                     //consider a gap day
                     if(mData.elementAt(i).getOpen() < T.getTarget()) {
-                        //close at open  a gap down day
+                        //close at open; a gap down day
                         T.close(mData.elementAt(i).getDate(), mData.elementAt(i).getOpen(), i-ind);
                         return;
                     }else {
@@ -131,26 +137,18 @@ public class SymbolTester {
                 return false;
             }
         }
-        //display the first 120 bars
-        /*As an example let's test the following pattern
-         * 1- today makes a 10 days low
-         * 2- today is an outside bar (reversal) today's low is smaller than yesterday's low and today's high is larger than yesterday's high.
-         * 3- today's close near the high (within less than 10%) (high-close)/(high-low)<0.1;
-         * 4- buy at open tomorrow and stop today's low and target factor*risk
-         */
-
-        //TODO: Code your pattern here
-
+        // The following code contains our pattern:
         for(int i = 10; i <mData.size()-2; i++) {
             if(xDaysLow(i, 10)
                     && mData.elementAt(i).getLow() < mData.elementAt(i-1).getLow()
                     && mData.elementAt(i).getHigh() > mData.elementAt(i-1).getHigh()
-                    && (mData.elementAt(i).getHigh() - mData.elementAt(i).getClose())/(mData.elementAt(i).range()) < 0.1)
+                    && mData.elementAt(i).getClose() > mData.elementAt(i-1).getClose()
+                    && mData.elementAt(i+1).getOpen() > mData.elementAt(i).getLow())
             {
-                //we have a trade, buy at opne of i+1 (tomorrow) stoploss i.low, target = entry+factor*risk
+                //we have a trade, buy at open of i+1 (tomorrow) stop-loss i.low, target = entry+factor*risk
                 float entryprice = mData.elementAt(i+1).getOpen();
                 float stoploss = mData.elementAt(i).getLow() - 0.01f;
-                float risk = entryprice - stoploss;
+                float risk = entryprice - mData.elementAt(i).getLow();
                 float target = entryprice + riskFactor * risk;
                 Trade T = new Trade();
                 T.open(mSymbol, mData.elementAt(i+1).getDate(), entryprice, stoploss, target, Direction.LONG);
@@ -162,12 +160,13 @@ public class SymbolTester {
             }else if(xDaysHigh(i, 10)
                     && mData.elementAt(i).getHigh() > mData.elementAt(i-1).getHigh()
                     && mData.elementAt(i).getLow() < mData.elementAt(i-1).getLow()
-                    && (mData.elementAt(i).getClose() - mData.elementAt(i).getLow())/(mData.elementAt(i).getHigh() - mData.elementAt(i).getLow()) < 0.1)
+                    && mData.elementAt(i).getClose() < mData.elementAt(i-1).getClose()
+                    && mData.elementAt(i+1).getOpen() < mData.elementAt(i).getHigh())
             {
-                //we have a trade, buy at opne of i+1 (tomorrow) stoploss i.low, target = entry+factor*risk
+                //we have a trade, buy at open of i+1 (tomorrow) stop-loss i.low, target = entry+factor*risk
                 float entryprice = mData.elementAt(i+1).getOpen();
                 float stoploss = mData.elementAt(i).getHigh() + 0.01f;
-                float risk = stoploss - entryprice;
+                float risk = stoploss - entryprice; // might have to edit this; ask Professor Omar if it's correct
                 float target = entryprice - riskFactor * risk;
                 Trade T = new Trade();
                 T.open(mSymbol, mData.elementAt(i+1).getDate(), entryprice, stoploss, target, Direction.SHORT);
