@@ -9,7 +9,7 @@ public class Statistics {
     double averageHoldingPeriodLong;
     double averageProfitPerDayLong;
     double winningPercentLong;
-    //Do the same fgor shorts
+    //Do the same for shorts
     double averageProfitShort;
     double averageHoldingPeriodShort;
     double averageProfitPerDayShort;

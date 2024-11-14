@@ -130,6 +130,9 @@ public class SymbolTester {
     }
 
     public boolean test() {
+        //error handling on data loading
+        //loads code if not loaded
+        // returns an  error if error can't be loaded
         if(!loaded) {
             loadData();
             if (!loaded) {
@@ -137,20 +140,31 @@ public class SymbolTester {
                 return false;
             }
         }
+
         // The following code contains our pattern:
+        // loops through the data.
+        // to avoid out of bound exceptions it start at index 10 to data size  -2
         for(int i = 10; i <mData.size()-2; i++) {
+            // if the days low are in the last 10 days conditons are met
             if(xDaysLow(i, 10)
+                    // Current low is less than previous low
                     && mData.elementAt(i).getLow() < mData.elementAt(i-1).getLow()
+                    // Current high is greater than previous high
                     && mData.elementAt(i).getHigh() > mData.elementAt(i-1).getHigh()
+                    // Current close is greater than previous close
                     && mData.elementAt(i).getClose() > mData.elementAt(i-1).getClose()
-                    && mData.elementAt(i+1).getOpen() > mData.elementAt(i).getLow())
-            {
-                //we have a trade, buy at open of i+1 (tomorrow) stop-loss i.low, target = entry+factor*risk
+                    // checks the next day's opening price is above the current day's low
+                    && mData.elementAt(i+1).getOpen() > mData.elementAt(i).getLow()) {
+                // Next day's open is greater than current low
+                // We have a trade opportunity: buy at the open of the next day
                 float entryprice = mData.elementAt(i+1).getOpen();
-                float stoploss = mData.elementAt(i).getLow() - 0.01f;
-                float risk = entryprice - mData.elementAt(i).getLow();
-                float target = entryprice + riskFactor * risk;
+                float stoploss = mData.elementAt(i).getLow() - 0.01f; // Set stop-loss just below current low
+                float risk = entryprice - mData.elementAt(i).getLow(); // Calculate risk based on entry price and current low
+                float target = entryprice + riskFactor * risk; // Target price based on risk and a risk factor
+
                 Trade T = new Trade();
+
+                // Open the trade
                 T.open(mSymbol, mData.elementAt(i+1).getDate(), entryprice, stoploss, target, Direction.LONG);
                 outcomes(T, i+1);
                 //add the trade to the Trade vector
@@ -165,8 +179,12 @@ public class SymbolTester {
             {
                 //we have a trade, buy at open of i+1 (tomorrow) stop-loss i.low, target = entry+factor*risk
                 float entryprice = mData.elementAt(i+1).getOpen();
+
+                // Set stop-loss just above current high
                 float stoploss = mData.elementAt(i).getHigh() + 0.01f;
+
                 float risk = stoploss - entryprice; // might have to edit this; ask Professor Omar if it's correct
+
                 float target = entryprice - riskFactor * risk;
                 Trade T = new Trade();
                 T.open(mSymbol, mData.elementAt(i+1).getDate(), entryprice, stoploss, target, Direction.SHORT);
