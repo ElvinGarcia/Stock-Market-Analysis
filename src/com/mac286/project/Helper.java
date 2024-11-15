@@ -30,15 +30,52 @@ public class Helper {
     }
 
     //Write a Static method that accepts a Vector of Trades and goes
+
     //through it to compute all statistics, return the statistics as
     //an object.
-    public static Statistics computeStats(Vector<Trade> trades){
-        //Create a Statistics object
+    public static Statistics computeStats(Vector<Trade> trades) {
+        double totalProfitLong = 0.0;
+        double totalHoldingPeriodLong = 0.0;
+        double totalProfitShort = 0.0;
+        double totalHoldingPeriodShort = 0.0;
+        int winningCountLong = 0;
+        int winningCountShort = 0;
+        int totalCountLong = 0;
+        int totalCountShort = 0;
 
-        //go through Vector trades one by one and compute all the Stats
+        for (Trade trade : trades) {
+            if (trade.getDir() == Direction.LONG) {
+                totalCountLong++;
+                double profit = trade.percentPL();
+                totalProfitLong += profit;
+                totalHoldingPeriodLong += trade.getHoldingPeriod();
+                if (profit > 0) {
+                    winningCountLong++;
+                }
+            } else if (trade.getDir() == Direction.SHORT) {
+                totalCountShort++;
+                double profit = trade.percentPL();
+                totalProfitShort += profit;
+                totalHoldingPeriodShort += trade.getHoldingPeriod();
+                if (profit > 0) {
+                    winningCountShort++;
+                }
+            }
+        }
 
-        //return your object.
+        Statistics stats = new Statistics();
 
-        return null;
+        // Calc avg and win % for long trades
+        stats.averageProfitLong = totalCountLong > 0 ? totalProfitLong / totalCountLong : 0.0;
+        stats.averageHoldingPeriodLong = totalCountLong > 0 ? totalHoldingPeriodLong / totalCountLong : 0.0;
+        stats.winningPercentLong = totalCountLong > 0 ? (winningCountLong / (double) totalCountLong) * 100 : 0.0;
+
+        // Calc avg and win % for short trades
+        stats.averageProfitShort = totalCountShort > 0 ? totalProfitShort / totalCountShort : 0.0;
+        stats.averageHoldingPeriodShort = totalCountShort > 0 ? totalHoldingPeriodShort / totalCountShort : 0.0;
+        stats.winningPercentShort = totalCountShort > 0 ? (winningCountShort / (double) totalCountShort) * 100 : 0.0;
+
+        return stats;
     }
+
 }
