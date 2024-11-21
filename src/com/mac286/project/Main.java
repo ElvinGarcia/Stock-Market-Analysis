@@ -22,7 +22,9 @@ public class Main {
 
         //loop through the risk array
         for (float v : riskFactor) {
-            System.out.printf("************* Current Risk: %f *************", v);
+
+
+            System.out.printf("\n ************* Current Risk: %f *************", v);
             // Create a Tester with arguments path, file, and riskFactor v
             Tester testerStock = new Tester(path, fileStocks, v);
             //Call run method on the tester
@@ -31,6 +33,8 @@ public class Main {
             Vector<Trade> tradesStock = testerStock.getTrades();
             //call the helper method computeStats with the trade vector as input
             Statistics statsStock = Helper.computeStats(tradesStock);
+
+            System.out.println("\n----------------------------------------------");
             //display the results using the toString of the Statistics method
             System.out.println("************* Stock Statistics *************");
             System.out.println(statsStock);
@@ -38,12 +42,16 @@ public class Main {
             testerETF.run();
             Vector<Trade> tradesETF = testerETF.getTrades();
             Statistics statsETF = Helper.computeStats(tradesETF);
-            System.out.println("************* ETF Statistics *************");
+
+
+            System.out.println("\n************* ETF Statistics *************");
             System.out.println(statsETF);
 
             tradesStock.addAll(tradesETF);
             Statistics all = Helper.computeStats(tradesStock);
-            System.out.println("************* Combined Statistics *************");
+
+
+            System.out.println("\n************* Combined Statistics *************");
             System.out.println(all);
         }
     }
