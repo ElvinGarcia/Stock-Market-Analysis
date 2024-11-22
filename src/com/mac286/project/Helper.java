@@ -34,17 +34,19 @@ public class Helper {
     //through it to compute all statistics, return the statistics as
     //an object.
     public static Statistics computeStats(Vector<Trade> trades) {
+        // Initialize variables for long trades
         double totalProfitLong = 0.0;
         double totalHoldingPeriodLong = 0.0;
+        int winningCountLong = 0;
+        int totalCountLong = 0;
+
+        // Initialize variables for short trades
         double totalProfitShort = 0.0;
         double totalHoldingPeriodShort = 0.0;
-
-        int winningCountLong = 0;
         int winningCountShort = 0;
-        int totalCountLong = 0;
         int totalCountShort = 0;
 
-
+        // Loop through each trade to calculate totals
         for (Trade trade : trades) {
             if (trade.getDir() == Direction.LONG) {
                 totalCountLong++;
@@ -65,33 +67,49 @@ public class Helper {
             }
         }
 
+        // Create a Statistics object to hold the results
         Statistics stats = new Statistics();
 
-        // Calc avg and win % for long trades
-        stats.averageProfitLong = totalCountLong > 0 ? totalProfitLong / totalCountLong : 0.0;
-        stats.averageHoldingPeriodLong = totalCountLong > 0 ? totalHoldingPeriodLong / totalCountLong : 0.0;
-        stats.winningPercentLong = totalCountLong > 0 ? (winningCountLong / (double) totalCountLong) * 100 : 0.0;
+        // Calculate averages and winning percentages for long trades
+        if (totalCountLong > 0) {
+            // avg profit for long trades
+            stats.averageProfitLong = totalProfitLong / totalCountLong;
+            // avg holding period for long trades
+            stats.averageHoldingPeriodLong = totalHoldingPeriodLong / totalCountLong;
+            // avg profit / day for long trades
+            stats.averageProfitPerDayLong = stats.averageProfitLong / stats.averageHoldingPeriodLong;
+            // win percentage for long trades
+            stats.winningPercentLong = (winningCountLong / (double) totalCountLong) * 100;
+        }
 
-        // Calc avg and win % for short trades
-        stats.averageProfitShort = totalCountShort > 0 ? totalProfitShort / totalCountShort : 0.0;
-        stats.averageHoldingPeriodShort = totalCountShort > 0 ? totalHoldingPeriodShort / totalCountShort : 0.0;
-        stats.winningPercentShort = totalCountShort > 0 ? (winningCountShort / (double) totalCountShort) * 100 : 0.0;
+        // Calculate averages and winning percentages for short trades
+        if (totalCountShort > 0) {
+            // avg profit for short trades
+            stats.averageProfitShort = totalProfitShort / totalCountShort;
+            // avg holding period for short trades
+            stats.averageHoldingPeriodShort = totalHoldingPeriodShort / totalCountShort;
+            // avg profit / day for short trades
+            stats.averageProfitPerDayShort = stats.averageProfitShort / stats.averageHoldingPeriodShort;
+            // win percentage  short trades
+            stats.winningPercentShort = (winningCountShort / (double) totalCountShort) * 100;
+        }
 
-        // Calc avg Profit,holding period, profit per day, winning percentage
-
-        // averageProfit = "total profit / by the number of trades." ;
-        stats.averageProfit = (totalProfitLong + totalProfitShort)/(trades.size()) ;
-
-        // "Total holding period divided by the number of trades."
-        stats.averageHoldingPeriod = (totalHoldingPeriodLong + totalHoldingPeriodShort)/(trades.size()) ;
-
-        // "Total profit divided by the total holding period (assuming it's in days)."
-        stats.averageProfitPerDay = (totalProfitLong + totalProfitShort) / (totalHoldingPeriodLong + totalHoldingPeriodShort) ;
-
-        // "The percentage of trades that were profitable."
-        stats.winningPercent = stats.averageProfitPerDay;
+        // Calculate overall statistics
+        int totalCount = totalCountLong + totalCountShort;
+        if (totalCount > 0) {
+            //  avg profit
+            stats.averageProfit = (totalProfitLong + totalProfitShort) / totalCount;
+            // avg holding period
+            stats.averageHoldingPeriod = (totalHoldingPeriodLong + totalHoldingPeriodShort) / totalCount;
+            // avg profit/day
+            stats.averageProfitPerDay = stats.averageProfit / stats.averageHoldingPeriod;
+            // WTF is this not working
+            //  winning percentage
+            stats.winningPercent = ((winningCountLong + winningCountShort) / (double) totalCount) * 100;
+        }
 
         return stats;
     }
+
 
 }
