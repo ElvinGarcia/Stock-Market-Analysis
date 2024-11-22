@@ -34,17 +34,25 @@ public class Main {
             //call the helper method computeStats with the trade vector as input
             Statistics statsStock = Helper.computeStats(tradesStock);
 
-            System.out.println("\n----------------------------------------------");
+
             //display the results using the toString of the Statistics method
             System.out.println("************* Stock Statistics *************");
+
+            System.out.println("\n Number of Stocks "+ tradesStock.size() + "\n");
+
             System.out.println(statsStock);
             Tester testerETF = new Tester(path, fileETFs, v);
             testerETF.run();
             Vector<Trade> tradesETF = testerETF.getTrades();
-            Statistics statsETF = Helper.computeStats(tradesETF);
+
 
 
             System.out.println("\n************* ETF Statistics *************");
+
+            System.out.println("\n Number of ETF "+ tradesETF.size() + "\n");
+
+            Statistics statsETF = Helper.computeStats(tradesETF);
+
             System.out.println(statsETF);
 
             tradesStock.addAll(tradesETF);

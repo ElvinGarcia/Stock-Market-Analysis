@@ -38,10 +38,12 @@ public class Helper {
         double totalHoldingPeriodLong = 0.0;
         double totalProfitShort = 0.0;
         double totalHoldingPeriodShort = 0.0;
+
         int winningCountLong = 0;
         int winningCountShort = 0;
         int totalCountLong = 0;
         int totalCountShort = 0;
+
 
         for (Trade trade : trades) {
             if (trade.getDir() == Direction.LONG) {
@@ -74,6 +76,20 @@ public class Helper {
         stats.averageProfitShort = totalCountShort > 0 ? totalProfitShort / totalCountShort : 0.0;
         stats.averageHoldingPeriodShort = totalCountShort > 0 ? totalHoldingPeriodShort / totalCountShort : 0.0;
         stats.winningPercentShort = totalCountShort > 0 ? (winningCountShort / (double) totalCountShort) * 100 : 0.0;
+
+        // Calc avg Profit,holding period, profit per day, winning percentage
+
+        // averageProfit = "total profit / by the number of trades." ;
+        stats.averageProfit = (totalProfitLong + totalProfitShort)/(trades.size()) ;
+
+        // "Total holding period divided by the number of trades."
+        stats.averageHoldingPeriod = (totalHoldingPeriodLong + totalHoldingPeriodShort)/(trades.size()) ;
+
+        // "Total profit divided by the total holding period (assuming it's in days)."
+        stats.averageProfitPerDay = (totalProfitLong + totalProfitShort) / (totalHoldingPeriodLong + totalHoldingPeriodShort) ;
+
+        // "The percentage of trades that were profitable."
+        stats.winningPercent = stats.averageProfitPerDay;
 
         return stats;
     }
