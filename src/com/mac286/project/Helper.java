@@ -51,7 +51,7 @@ public class Helper {
             if (trade.getDir() == Direction.LONG) {
                 totalCountLong++;
                 double profit = trade.percentPL();
-                totalProfitLong += profit;
+                totalProfitLong += profit * 100; // change decimal to percent
                 totalHoldingPeriodLong += trade.getHoldingPeriod();
                 if (profit > 0) {
                     winningCountLong++;
@@ -59,7 +59,7 @@ public class Helper {
             } else if (trade.getDir() == Direction.SHORT) {
                 totalCountShort++;
                 double profit = trade.percentPL();
-                totalProfitShort += profit;
+                totalProfitShort += profit * 100; // change decimal to percent
                 totalHoldingPeriodShort += trade.getHoldingPeriod();
                 if (profit > 0) {
                     winningCountShort++;
@@ -73,42 +73,45 @@ public class Helper {
         // Calculate averages and winning percentages for long trades
         if (totalCountLong > 0) {
             // avg profit for long trades
-            stats.averageProfitLong = totalProfitLong / totalCountLong;
+            stats.averageProfitLong = roundTwoDec(totalProfitLong / totalCountLong);
             // avg holding period for long trades
-            stats.averageHoldingPeriodLong = totalHoldingPeriodLong / totalCountLong;
+            stats.averageHoldingPeriodLong = roundTwoDec(totalHoldingPeriodLong / totalCountLong);
             // avg profit / day for long trades
-            stats.averageProfitPerDayLong = stats.averageProfitLong / stats.averageHoldingPeriodLong;
+            stats.averageProfitPerDayLong = roundTwoDec(stats.averageProfitLong / stats.averageHoldingPeriodLong);
             // win percentage for long trades
-            stats.winningPercentLong = (winningCountLong / (double) totalCountLong) * 100;
+            stats.winningPercentLong = roundTwoDec((winningCountLong / (double) totalCountLong) * 100);
         }
 
         // Calculate averages and winning percentages for short trades
         if (totalCountShort > 0) {
             // avg profit for short trades
-            stats.averageProfitShort = totalProfitShort / totalCountShort;
+            stats.averageProfitShort = roundTwoDec(totalProfitShort / totalCountShort);
             // avg holding period for short trades
-            stats.averageHoldingPeriodShort = totalHoldingPeriodShort / totalCountShort;
+            stats.averageHoldingPeriodShort = roundTwoDec(totalHoldingPeriodShort / totalCountShort);
             // avg profit / day for short trades
-            stats.averageProfitPerDayShort = stats.averageProfitShort / stats.averageHoldingPeriodShort;
+            stats.averageProfitPerDayShort = roundTwoDec(stats.averageProfitShort / stats.averageHoldingPeriodShort);
             // win percentage  short trades
-            stats.winningPercentShort = (winningCountShort / (double) totalCountShort) * 100;
+            stats.winningPercentShort = roundTwoDec((winningCountShort / (double) totalCountShort) * 100);
         }
 
         // Calculate overall statistics
         int totalCount = totalCountLong + totalCountShort;
         if (totalCount > 0) {
             //  avg profit
-            stats.averageProfit = (totalProfitLong + totalProfitShort) / totalCount;
+            stats.averageProfit = roundTwoDec((totalProfitLong + totalProfitShort) / totalCount);
             // avg holding period
-            stats.averageHoldingPeriod = (totalHoldingPeriodLong + totalHoldingPeriodShort) / totalCount;
+            stats.averageHoldingPeriod = roundTwoDec((totalHoldingPeriodLong + totalHoldingPeriodShort) / totalCount);
             // avg profit/day
-            stats.averageProfitPerDay = stats.averageProfit / stats.averageHoldingPeriod;
-            // WTF is this not working
+            stats.averageProfitPerDay = roundTwoDec(stats.averageProfit / stats.averageHoldingPeriod);
             //  winning percentage
-            stats.winningPercent = ((winningCountLong + winningCountShort) / (double) totalCount) * 100;
+            stats.winningPercent = roundTwoDec(((winningCountLong + winningCountShort) / (double) totalCount) * 100);
         }
 
         return stats;
+    }
+
+    public static double roundTwoDec(double d) {
+        return Math.round(d * 100.0) / 100.0;
     }
 
 
