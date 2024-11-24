@@ -183,7 +183,7 @@ public class SymbolTester {
                 // Set stop-loss just above current high
                 float stoploss = mData.elementAt(i).getHigh() + 0.01f;
 
-                float risk = stoploss - entryprice; // might have to edit this; ask Professor Omar if it's correct
+                float risk = stoploss - entryprice;
 
                 float target = entryprice - riskFactor * risk;
                 Trade T = new Trade();
