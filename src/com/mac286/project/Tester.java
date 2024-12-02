@@ -41,22 +41,21 @@ public class Tester {
     }
     public boolean run() {
         if (vSymbols == null || vSymbols.isEmpty()) {
-            vSymbols = Helper.loadSymbols(mPath, mFile); // create a new one part
+            vSymbols = Helper.loadSymbols(mPath, mFile); // load symbols again if not already loaded
             if (vSymbols == null || vSymbols.isEmpty()) {
                 return false;
             }
         }
 
-        //if mTrades null create a new one.
         if (mTrades == null) {
-            mTrades = new Vector<Trade>(); //create a new one part
+            mTrades = new Vector<Trade>(); // create a vector of trades if not already done so
         }
-        //go through the vSymbols, for each symbol,
+        // go through the vSymbols. For each symbol:
         for (String symbol : vSymbols) {
             // create a symbol Tester with appropriate parameters
             SymbolTester symbolTester = new SymbolTester(symbol, mPath, risk);
-            symbolTester.test();//Test the symbol (calling .test() method)
-            //collect the trades by calling getTrades() method of the SymbolTester
+            symbolTester.test(); // Test the symbol (calling .test() method)
+            // collect the trades by calling getTrades() method of the SymbolTester
             Vector<Trade> trades = symbolTester.getTrades();
             mTrades.addAll(trades);
         }

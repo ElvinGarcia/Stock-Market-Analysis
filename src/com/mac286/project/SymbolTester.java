@@ -144,9 +144,9 @@ public class SymbolTester {
         // The following code contains our pattern:
         // loops through the data.
         // to avoid out of bound exceptions it start at index 10 to data size  -2
-        for(int i = 10; i <mData.size()-2; i++) {
+        for(int i = 11; i <mData.size()-2; i++) {
             // if the days low are in the last 10 days conditons are met
-            if(xDaysLow(i, 10)
+            if(xDaysHigh(i-1, 10)
                     // Current low is less than previous low
                     && mData.elementAt(i).getLow() < mData.elementAt(i-1).getLow()
                     // Current high is greater than previous high
@@ -171,7 +171,7 @@ public class SymbolTester {
                 mTrades.add(T);
 
                 //Short for reverse trade change low to high, high to low larger to smaller and smaller to larger
-            }else if(xDaysHigh(i, 10)
+            }else if(xDaysLow(i-1, 10)
                     && mData.elementAt(i).getHigh() > mData.elementAt(i-1).getHigh()
                     && mData.elementAt(i).getLow() < mData.elementAt(i-1).getLow()
                     && mData.elementAt(i).getClose() < mData.elementAt(i-1).getClose()
