@@ -11,7 +11,7 @@ public class Helper {
     // make sure to pass in: "src/com/mac286/project/Data/" as the path when using loadSymbols()
     public static Vector<String> loadSymbols(String path, String file){
         //TODO: Create a Vector symbols
-        Vector<String> symbols = new Vector<String>();
+        Vector<String> symbols = new Vector<>();
         //Open the input file and read line by line, trim the string
         //and add it to the Vector symbols
         File currFile = new File(path+file);
