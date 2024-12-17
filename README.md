@@ -2,7 +2,7 @@
 📈 A powerful project designed for analyzing stock market trends, exploring historical data, and visualizing financial insights. 
 This project uses Java for stock market analysis.
 
-![img.png](img.png)
+![img.png](src/com/mac286/project/img.png)
 
 💻 ## Algorithms and Technical Analysis
 ### Price Analysis
